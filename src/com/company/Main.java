@@ -11,19 +11,22 @@ import java.util.List;
 public class Main {
 
     public static final Company[] companies = {
-            new Company("A", new String[]{"1", "2", "3", "4"}),
-            new Company("B", new String[]{"1", "3", "2", "4"}),
-            new Company("C", new String[]{"4", "2", "3", "1"}),
-            new Company("D", new String[]{"2", "3", "1", "4"}),
+            new Company("A", new String[]{"1", "2", "3", "4","5"}),
+            new Company("B", new String[]{"1", "3", "2", "5","4"}),
+            new Company("C", new String[]{"4", "2", "5", "1","3"}),
+            new Company("D", new String[]{"5", "3", "1", "4","2"}),
+            new Company("E", new String[]{"2", "3", "5", "4","1"}),
     };
 
     public static final Employee[] employees = {
-            new Employee("1", new String[]{"A", "B", "C", "D"}),
-            new Employee("2", new String[]{"D", "A", "B", "C"}),
-            new Employee("3", new String[]{"C", "B", "A", "D"}),
-            new Employee("4", new String[]{"B", "C", "D", "A"}),
+            new Employee("1", new String[]{"A", "B", "C", "D", "E"}),
+            new Employee("2", new String[]{"E", "A", "B", "C", "D"}),
+            new Employee("3", new String[]{"E", "B", "A", "D", "C"}),
+            new Employee("4", new String[]{"E", "C", "D", "A", "B"}),
+            new Employee("5", new String[]{"B", "C", "D", "E", "A"}),
     };
 
+    public static int counter = 0;
 
     public static void main(String[] args) {
 
@@ -34,6 +37,7 @@ public class Main {
         printPairs(pairs);
 
         System.out.println("Time taken: " + (time2 - time1));
+        System.out.println("Made " + counter + " comparisons.");
     }
 
     private static void printPairs(List<Pair> pairs) {
@@ -52,7 +56,7 @@ public class Main {
                 pairs.add(new Pair(
                         company,
                         Arrays.stream(employees)
-                                .filter(employee -> employee.getName().equals(currentPreference))
+                                .filter(employee -> employee.nameEquals(currentPreference))
                                 .findFirst().orElse(null),
                         position
                 ));
@@ -64,6 +68,7 @@ public class Main {
         pairs.sort((pair1, pair2) -> {
             Integer happiness1 = calculateHappiness(pair1);
             Integer happiness2 = calculateHappiness(pair2);
+            counter++;
             return happiness1.compareTo(happiness2);
         });
 
@@ -89,8 +94,11 @@ public class Main {
                 .findFirst().orElse(null);
 
         int point2 = 0;
+
+        assert employee != null;
         String[] preferences = employee.getPreferences();
         for (int i = 0; i < preferences.length; i++) {
+            counter++;
             if (preferences[i].equals(pair.getCompany().getName())){
                 point2 = i;
             }
