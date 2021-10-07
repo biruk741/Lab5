@@ -7,6 +7,7 @@ import com.company.classes.Pair;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -115,6 +116,47 @@ public class Main {
         System.out.println("Time taken: " + (time2 - time1));
         System.out.println("Made " + counter + " comparisons. \n");
         counter = 0;
+    }
+
+    private static boolean foundBetter(Pair[] result, Employee[] employees, Company[] companies){
+        for (Pair pair: result){
+            List<List<Pair>> companyPairs = Arrays.stream(companies).map(
+                    company -> {
+                        List<Pair> pairs = new ArrayList<>();
+                        String[] prefs = company.getPreferences();
+                        for (int i = 0; i < prefs.length; i++) {
+                            String pref = prefs[i];
+                            if (pair.getEmployee().nameEquals(pref)){
+                                pairs.add(new Pair(
+                                        company,
+                                        new Employee(pref, pair.getEmployee().getPreferences()),
+                                        companies.length - i
+                                ));
+                            }
+                        }
+                        return pairs;
+                    }
+            ).collect(Collectors.toList());
+
+            List<List<Pair>> employeePairs = Arrays.stream(employees).map(
+                    employee -> {
+                        List<Pair> pairs = new ArrayList<>();
+                        String[] prefs = employee.getPreferences();
+                        for (int i = 0; i < prefs.length; i++) {
+                            String pref = prefs[i];
+                            if (pair.getCompany().nameEquals(pref)){
+                                pairs.add(new Pair(
+                                        new Company(pref, pair.getCompany().getPreferences()),
+                                        employee,
+                                        employees.length - i
+                                ));
+                            }
+                        }
+                        return pairs;
+                    }
+            ).collect(Collectors.toList());
+        }
+
     }
 
     private static void populateArrays() {
