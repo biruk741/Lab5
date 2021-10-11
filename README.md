@@ -1,4 +1,4 @@
-# Lab5
+# Lab5: Matching Problem
 __How to Run:__
 The function that does the actual matching is process()
 and it takes an array of companies and their preferences
