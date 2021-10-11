@@ -19,6 +19,8 @@ public class Main {
 
     public static void main(String[] args) {
 
+        populateArrays();
+
         printResults(companies, employees, 1);
         printResults(companies1, employees1, 2); // write-up example
         printResults(companies2, employees2, 3);
@@ -35,19 +37,22 @@ public class Main {
      *
      * @return A list of sufficient pairs of companies and employees.
      */
-    private static List<Pair> process(Company[] companies, Employee[] employees) {
+    private static List<Pair> process(Company[] companies, Employee[] employees)
+    {
         List<Pair> pairs = new ArrayList<>();
         List<Pair> result = new ArrayList<>();
 
 
-        for (Company company : companies) {
+        for (Company company : companies)
+        {
             String[] preferences = company.getPreferences();
-            for (int position = 0; position < preferences.length; position++) {
+            for (int position = 0; position < preferences.length; position++)  // Nested for loop (n^2)
+            {
                 String currentPreference = preferences[position];
                 pairs.add(new Pair(
                         company,
                         Arrays.stream(employees)
-                                .filter(employee -> employee.nameEquals(currentPreference))
+                                .filter(employee -> employee.nameEquals(currentPreference)) // filter over n elements (n)
                                 .findFirst().orElse(null),
                         preferences.length - position
                 ));
@@ -114,7 +119,12 @@ public class Main {
 
         System.out.println("Results of test #" + testNumber + ":");
         System.out.println("Time taken: " + (time2 - time1));
-        System.out.println("Made " + counter + " comparisons. \n");
+        System.out.println("Made " + counter + " comparisons.");
+        Pair[] converted = new Pair[pairs.size()];
+        pairs.toArray(converted);
+        if (foundBetter(converted,employees,companies))
+            System.out.println("Found a more satisfactory solution.\n");
+        else System.out.println("Solution is satisfactory.\n");
         counter = 0;
     }
 
@@ -155,8 +165,16 @@ public class Main {
                         return pairs;
                     }
             ).collect(Collectors.toList());
+            int happiness1 = calculateHappiness(pair);
+            for (int i = 0; i < companyPairs.size(); i++) {
+                Pair compPair = companyPairs.get(i).get(0);
+                Pair emplPair = employeePairs.get(i).get(0);
+                if (compPair.getHappiness() + emplPair.getHappiness() > happiness1){
+                    return true;
+                }
+            }
         }
-
+        return false;
     }
 
     private static void populateArrays() {
