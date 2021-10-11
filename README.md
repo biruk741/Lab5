@@ -83,12 +83,12 @@ Made 1034 comparisons.
 Solution is satisfactory.
 // more test cases that are also satisfactory...
 ```
-#How it works
+# How it works
 
 The algorithm works by first taking out all the company->employee pairs in the companies array, assigning them a score based on their position in the preferences and then putting them into a list. After doing this
 , it then sorts the list according to a "happiness score". The happiness score is calculated by going through the employees list, checking the position of the pair in the employees list, assigning it a score, and then adding up the two scores to come up with a cumulative score that we call the happiness score. The happiness score represents how happy both parties are collectively. After sorting the pairs according to their happiness score from highest to lowest, it then finds the first occurence of each company/employee and then adds them to a result array. Since the array has been sorted according to the overall happiness score, the first occurences of each company/employee are the most satisfactory pairings. 
 The algorithm then stops when it goes through the array of all sorted pairings and adds each first occurence to the result array.
-#Efficiency:
+# Efficiency:
 Due to our algorithm having several nested iterations, we
 calculated our algorithm to have an efficiency ϴ(n^3). Here is how we calculated this result:
 
