@@ -111,21 +111,23 @@ public class Main {
      * @param testNumber the test number.
      */
     private static void printResults(Company[] companies, Employee[] employees, int testNumber) {
+        System.out.println("Results of test #" + testNumber + ":");
+
         long time1 = System.currentTimeMillis();
         List<Pair> pairs = process(companies, employees);
         long time2 = System.currentTimeMillis();
 
         printPairs(pairs);
 
-        System.out.println("Results of test #" + testNumber + ":");
-        System.out.println("Time taken: " + (time2 - time1));
+        System.out.println("Time taken: " + (time2 - time1) + "ms.");
         System.out.println("Made " + counter + " comparisons.");
         Pair[] converted = new Pair[pairs.size()];
         pairs.toArray(converted);
         if (foundBetter(converted,employees,companies))
             System.out.println("Found a more satisfactory solution.\n");
-        else System.out.println("Solution is satisfactory.\n");
+        else System.out.println("Solution is satisfactory.");
         counter = 0;
+        System.out.println("--------------------------------");
     }
 
     private static boolean foundBetter(Pair[] result, Employee[] employees, Company[] companies){

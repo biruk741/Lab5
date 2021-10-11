@@ -1,12 +1,11 @@
 # Lab5
-How to Run:
+__How to Run:__
 The function that does the actual matching is process()
 and it takes an array of companies and their preferences
 and an array of employees and their preferences (See bottom 
 of main class for examples).
 
-Best to run the printResults method with the same  inputs as
-process, as it will print useful information about the
+It is best to run the process method using printResults, as it will print useful information about the
 matching.
 
 
@@ -71,13 +70,28 @@ example from the lab write-up).
 ```
 
 In all four test cases the
-solution that our algorithm found was satisfactory.
-
-Efficiency:
+solution that our algorithm found was satisfactory. As shown when running the program:
+```
+Pair{company=A, employee=1}
+Pair{company=E, employee=2}
+Pair{company=C, employee=4}
+Pair{company=B, employee=3}
+Pair{company=D, employee=5}
+Results of test #1:
+Time taken: 4
+Made 1034 comparisons.
+Solution is satisfactory.
+// more test cases that are also satisfactory...
+```
+##How it works
+The algorithm works by first taking out all the company->employee pairs in the companies array, assigning them a score based on their position in the preferences and then putting them into a list. After doing this
+, it then sorts the list according to a "happiness score". The happiness score is calculated by going through the employees list, checking the position of the pair in the employees list, assigning it a score, and then adding up the two scores to come up with a cumulative score that we call the happiness score. The happiness score represents how happy both parties are collectively. After sorting the pairs according to their happiness score from highest to lowest, it then finds the first occurence of each company/employee and then adds them to a result array. Since the array has been sorted according to the overall happiness score, the first occurences of each company/employee are the most satisfactory pairings. 
+The algorithm then stops when it goes through the array of all sorted pairings and adds each first occurence to the result array.
+#Efficiency:
 Due to our algorithm having several nested iterations, we
-calculated our algorithm to have an efficiency ϴ(n^3).
+calculated our algorithm to have an efficiency ϴ(n^3). Here is how we calculated this result:
 
-__See notes next to code for explanations__
+__See comments next to code for explanations__
 
 ```java
 for (Company company : companies) 
@@ -98,7 +112,7 @@ for (Company company : companies)
 ```
 At this point, due to a nested for loop, and a filter 
 over n elements (in its worst case)
-inside of the nested for loop, the efficiency is n^3.
+inside of the nested for loop, the efficiency is n^3. Moving on to the rest of the algorithm, we have:
 
 ```java
  pairs.sort((pair1, pair2) -> {
@@ -111,7 +125,19 @@ inside of the nested for loop, the efficiency is n^3.
 ``sort()`` uses mergesort in addition to insertion sort, the
 implementation looks as follows:
 
-So worst case efficiency is n^3.
+```java
+        if (length < INSERTIONSORT_THRESHOLD) {
+            for (int i=low; i<high; i++)
+                for (int j=i; j>low && c.compare(dest[j-1], dest[j])>0; j--)
+                    swap(dest, j, j-1);
+            return;
+        }
+        // continue to mergesort...
+```
+In the worst case, since the insertion sort algorithm runs our `calculateHappiness()` methods within the `compare()` function, it runs the `calculateHapiness()` functions n times.
+
+
+Calculate happiness has two iterations that run n times. This means that the insertion sorting efficiency is `n x n^2` = `n^3`
 
 ```java
 private static int calculateHappiness(Pair pair) {
@@ -134,10 +160,8 @@ private static int calculateHappiness(Pair pair) {
         return point1 + point2;
     }
 ```
-`calculateHappiness()` loops over the company preferences and
-employee preferences to calculate a happiness score for
-each pair.  Since there are n companies, and n employees,
-the efficiency is n^2 for both iterations.
+It then goes on to do the rest of the sorting at `nlog(n)` efficiency.
+At this point, the efficiency is `n^3 + n^3 + nlogn`.
 
 ```java
 for (Pair p1 : pairs) {
@@ -149,5 +173,20 @@ for (Pair p1 : pairs) {
             }
         }
 ```
-This loops over all pairs and finds the first containing 
-a unique company.  The worst case efficiency is n^2.
+This loops over all pairs (n^2 of them) and finds the first containing 
+a unique company.  In the worst case, it goes through the entire companies array, meaning n times.
+The efficiency for this loop is n^3.
+
+So the sum of all the efficiencies is:
+```
+n^3
++
+n^3
++
+nlogn 
++
+n^3
+
+= ϴ(n^3)
+```
+
